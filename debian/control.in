@@ -1,0 +1,34 @@
+Source: php-blitz
+Section: php
+Priority: optional
+Maintainer: Habr Team <servers@habr.team>
+Uploaders: Vadim Rybalko <vadim@habr.team>
+Build-Depends: debhelper (>= 10~),
+               dh-php (>= 4~),
+               liblz4-dev,
+               libzstd-dev,
+               php-all-dev
+Standards-Version: 4.5.1
+Vcs-Git: https://git.habralab.com/tools/php-blitz-debian.git
+Vcs-Browser: https://git.habralab.com/tools/php-blitz-debian
+Homepage: https://github.com/alexeyrybak/blitz
+
+Package: php-blitz
+Priority: optional
+Section: php
+Maintainer: Habr Team <servers@habr.team>
+Architecture: amd64
+Pre-Depends: php-common (>= 2:69~)
+Depends: ${misc:Depends},
+         ${pecl:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Breaks: ${pecl:Breaks}
+Replaces: ${pecl:Replaces}
+Suggests: ${pecl:Suggests}
+Provides: ${pecl:Provides},
+          ${php:Provides}
+Description: Blitz templates, template engine extension for PHP
+ Fast and powerfull template engine for very big internet projects
+ .
+
