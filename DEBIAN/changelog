@@ -1,0 +1,24 @@
+php-blitz (0.10.5-1) unstable; urgency=medium
+
+  * Varsion 0.10.5
+
+ -- Vadim Rybalko <vadim@bionicman.name>  Wed, 27 Jul 2022 23:23:06 +0300
+
+php-blitz (0.10.4-1) unstable; urgency=medium
+
+  * Varsion 0.10.4
+
+ -- Vadim Rybalko <vadim@bionicman.ru>  Sun, 23 Feb 2020 00:42:29 +0300
+
+php-blitz (0.9.1-2) unstable; urgency=medium
+
+  * 7.2 version added
+
+ -- notroot <notroot@habrrules>  Thu, 24 May 2018 08:15:14 +0000
+
+php-blitz (0.9.1-1) unstable; urgency=medium
+
+  * Initial release 
+
+ -- notroot <notroot@habrrules>  Wed, 04 Apr 2018 00:15:14 +0000
+

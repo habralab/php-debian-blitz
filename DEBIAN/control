@@ -1,0 +1,12 @@
+Package: php-blitz
+Priority: optional
+Section: php
+Maintainer: Habr Team <servers@habr.team>
+Architecture: amd64
+Version: 0.10.5-1+habr
+Provides: php7.0-blitz, php7.1-blitz, php7.2-blitz, php7.3-blitz, php7.4-blitz, php8.0-blitz, php8.1-blitz
+Depends: php-common (>= 1:7.0+33~), phpapi-20190902 | phpapi-20180731 | phpapi-20170718 | phpapi-20160303 | phpapi-20151012 | phpapi- | phpapi-, libc6 (>= 2.14)
+Description: Blitz templates, template engine extension for PHP
+ Fast and powerfull template engine for very big internet projects
+ .
+Homepage: https://github.com/alexeyrybak/blitz
