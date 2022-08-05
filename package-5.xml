@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<package packagerversion="1.10.12" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+ <name>blitz</name>
+ <channel>pecl.php.net</channel>
+ <summary>Blitz templates, template engine extension for PHP</summary>
+ <description>Fast and powerfull template engine for very big internet projects</description>
+ <lead>
+  <name>Vadim Rybalko</name>
+  <user>bionicman</user>
+  <email>vadim@bionicman.name</email>
+  <active>no</active>
+ </lead>
+ <date>2022-08-05</date>
+ <time>14:08:42</time>
+ <version>
+  <release>0.9.1</release>
+  <api>0.9.1</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.php.net/license">PHP</license>
+ <notes>
+blitz 0.9.1
+
+
+- FIX: added predefined constant $_i - loop identifier, same as $_num, but starts from 0.
+- FIX: "native" if, also fixes some logical errors (thanks to Nicolas Van Eenaeme)
+- FIX: arginfo added and a couple of other minor fixes (thanks to Anton "tony2001" Dovgal)*
+- FIX: zephir integration fix (plain blitz::__construct declaration)
+
+Also if/unless logic was unified across both function-like and context-like styles,
+so you can finally use things like {{ if (a>b &amp;&amp; c, "true", "false") }}.
+Enjoy.
+
+---
+
+blitz 0.8.18
+
+- Fix: NOT operator works incorrectly with string operands
+
+---
+
+blitz 0.8.17
+
+- FIX: fixes for complex conditions, added in 0.8.16
+
+---
+
+blitz v0.8.16
+
+- Merge branch 'poison-feature-complex-conditions'
+ </notes>
+ <contents>
+  <dir name="/">
+   <file md5sum="2eb1508369abe52f79a8460257a2344a" name="CHANGES" role="doc" />
+   <file md5sum="33fa197a2cae0e20e1ecc83e81c14790" name="config.w32" role="src" />
+   <file md5sum="68ff5402564378ab053a64102a5c5b22" name="misc/zend_studio/readme.txt" role="doc" />
+   <file md5sum="cfd5bae79ab585cc091cd3f82a89627c" name="misc/zend_studio/Blitz.php" role="src" />
+   <file md5sum="c62ff247166a2c8b62f5720602545a88" name="run-tests.sh" role="src" />
+   <file md5sum="0ae86a8648929f499f62fa70cc0c9636" name="README" role="doc" />
+   <file md5sum="cadc6f865c3264b8dbabea807e8908ac" name="config.m4" role="src" />
+   <file md5sum="e602e66209d7d5b03ffba93a69655f2e" name="php_blitz.h" role="src" />
+   <file md5sum="390accbc365a1d8e18c2ccdd84f2a8d7" name=".cvsignore" role="doc" />
+   <file md5sum="265be63fc7f89b0b393aa69f706cfff9" name="doc/README" role="doc" />
+   <file md5sum="e03a7979948cd93fa0139d2c596d2665" name="blitz.c" role="src" />
+   <file md5sum="f807daa50a73f6e823e8363b33459566" name="utils/release.sh" role="src" />
+   <file md5sum="9b1ca9cd1e3368104854aa51c5993140" name="utils/version.php" role="src" />
+   <file md5sum="72d64e4ad6f1160c41b218e2f60dfba5" name="LICENSE" role="doc" />
+   <file md5sum="6c6187a64650d8fd60b774780ab1ea13" name="tests/common.inc" role="test" />
+   <file md5sum="d79d8934c5e16db7b95f5dad4f938600" name="tests/clean_globals.phpt" role="test" />
+   <file md5sum="2efa65aea4190e495723373aa1d04598" name="tests/object.phpt" role="test" />
+   <file md5sum="06fe0a43566387aea2d8adf8a069cb06" name="tests/mfi.phpt" role="test" />
+   <file md5sum="156a71744112b352f4199490e9b11a69" name="tests/callback_settings.phpt" role="test" />
+   <file md5sum="cec355344e78260f1e3d54bae7579927" name="tests/scope6.phpt" role="test" />
+   <file md5sum="2d1ca43214298a6839d2c62cdb0ac9e2" name="tests/complex_conditions6.phpt" role="test" />
+   <file md5sum="1bf1f07a534f0884d64d1dff3e531b73" name="tests/complex_conditions_sanity.phpt" role="test" />
+   <file md5sum="aca9e4129a9de5bbb862f3b1c8b245ee" name="tests/complex_conditions2.phpt" role="test" />
+   <file md5sum="1ab0ab82d3a2489cb22cc9e5fa1664a1" name="tests/bug47.phpt" role="test" />
+   <file md5sum="2d138728c794a519386911f2bfd05abe" name="tests/ini.phpt" role="test" />
+   <file md5sum="4c127ad67bcb9737573a16411c7d603c" name="tests/include.tpl" role="test" />
+   <file md5sum="c9612236f35b53331a13c9fd5a4424a1" name="tests/get_context.phpt" role="test" />
+   <file md5sum="18b6e68f9c39964a0a99a6241814d871" name="tests/if_callback.phpt" role="test" />
+   <file md5sum="dda5f620eeb8996b31b5c978de2592ee" name="tests/complex_conditions.phpt" role="test" />
+   <file md5sum="45b4bbe669468a598da7fdc8646e1104" name="tests/get_error.phpt" role="test" />
+   <file md5sum="c50f05404f9dac79640dece8d5c98797" name="tests/block.phpt" role="test" />
+   <file md5sum="ff4c93444fc6a95c33ba4838edae69ce" name="tests/errors2.phpt" role="test" />
+   <file md5sum="2f94e91e97af38906541d8257d288535" name="tests/include_multi.phpt" role="test" />
+   <file md5sum="718031d04f5e8ddd50be4e08aea1d5d6" name="tests/auto_escape.phpt" role="test" />
+   <file md5sum="3037cd02d3de41aafdf0bbb16157b425" name="tests/arithmetics2.phpt" role="test" />
+   <file md5sum="d757c2af3985a15f54d6c705d4f65a11" name="tests/predefined.phpt" role="test" />
+   <file md5sum="8544ab457e4b0ba400a22bbaec839424" name="tests/magic_current_iterations.phpt" role="test" />
+   <file md5sum="f3b5c6d3fa8a40472c111646bf86cffb" name="tests/error_003.phpt" role="test" />
+   <file md5sum="0df693a98dd311d6378f4cffe2929521" name="tests/nest_deep.phpt" role="test" />
+   <file md5sum="1d3524e2d06c469df7574fe888b13b37" name="tests/fetch.tpl" role="test" />
+   <file md5sum="2978a73402cd53143cebbeb4f4e21f40" name="tests/var.phpt" role="test" />
+   <file md5sum="2fd30bbf8f988460d7f671dbca469a76" name="tests/duplicates_001.tpl" role="test" />
+   <file md5sum="470c13260dc307c32b08cd3727540ca5" name="tests/mix2.phpt" role="test" />
+   <file md5sum="bb83087bb6ef245b6dd836fe71961568" name="tests/scope3.phpt" role="test" />
+   <file md5sum="bf99ad9634b59cf9e25beeee82c1fa4e" name="tests/duplicates_001.phpt" role="test" />
+   <file md5sum="a3419e75f7506ab061e279ab5b6e394e" name="tests/if_context.phpt" role="test" />
+   <file md5sum="9ff59fe3e0b945da2ae6c34e1deef7e5" name="tests/if_expr4.phpt" role="test" />
+   <file md5sum="264c3819dfad160a671b0100604dd2df" name="tests/complex_conditions5.phpt" role="test" />
+   <file md5sum="c65aaf44cb0cb2655b9e455e49a8c9f7" name="tests/if_expr5.phpt" role="test" />
+   <file md5sum="fdc367541b3a4cebb4629de410d7096e" name="tests/phpt_compability.phpt" role="test" />
+   <file md5sum="fcb123dec47764998838145ff65c09dd" name="tests/mix4.phpt" role="test" />
+   <file md5sum="f992a8a4aac3a8a3a6a063e8f1382b9c" name="tests/if_complex.phpt" role="test" />
+   <file md5sum="b0dfc82e4ceefaa253fa51c0b5b53cc0" name="tests/method.phpt" role="test" />
+   <file md5sum="fc4b78a7faa37dbc4f93f5c3bf58e04d" name="tests/dump_iterations.tpl" role="test" />
+   <file md5sum="34c22dc7e1b22ca890468076be7c8e08" name="tests/mix1.phpt" role="test" />
+   <file md5sum="aa509b587ad39c9898376842213f78b6" name="tests/include-method.tpl" role="test" />
+   <file md5sum="53cad04439d9ec87e680298102cfbf6a" name="tests/fetch_cmplx.tpl" role="test" />
+   <file md5sum="42f9c8dccd90df4c5f5317dff4a327be" name="tests/bug83.phpt" role="test" />
+   <file md5sum="1f091971e30b7c9d88cc652f798e0f1f" name="tests/errors1.phpt" role="test" />
+   <file md5sum="8c1091582966f2ee17bb9d87323b2069" name="tests/arithmetics.phpt" role="test" />
+   <file md5sum="faef83f52c5f419c8b6da965cf1554b8" name="tests/include_ctx.phpt" role="test" />
+   <file md5sum="ac75ac46f2685c44410afc258a72eb4a" name="tests/complex_conditions4.phpt" role="test" />
+   <file md5sum="211cf4bef3c412ae73af350cc8bd0815" name="tests/test.tpl" role="test" />
+   <file md5sum="4a96f8a67a2265e6d0d447c6c8165c81" name="tests/set_and_get.phpt" role="test" />
+   <file md5sum="6a02620e0bf221dd3eed08dbdc95fce7" name="tests/error_003.tpl" role="test" />
+   <file md5sum="5cd03be0d992600c50afb14f9536b90d" name="tests/if_expr.phpt" role="test" />
+   <file md5sum="3227312de978dc431ee12ff846ab8331" name="tests/fetch2.phpt" role="test" />
+   <file md5sum="e55c2046375a190cd7aba43ae456731b" name="tests/fetch3.phpt" role="test" />
+   <file md5sum="746a74280e6c8e98c6e9001f3ab81249" name="tests/scope.phpt" role="test" />
+   <file md5sum="b4d138b690a9310c517e154c2d707ef4" name="tests/incorrect.phpt" role="test" />
+   <file md5sum="4a60368706120800f1d24f168c8f1b60" name="tests/var_path.phpt" role="test" />
+   <file md5sum="30465af1dc0306c5acb306552f5cbda0" name="tests/error_001.tpl" role="test" />
+   <file md5sum="e721b7e41ef8326924f7a05392cf7466" name="tests/nl2br.phpt" role="test" />
+   <file md5sum="e64120b90ba4711dfcb0252389547ed5" name="tests/if.phpt" role="test" />
+   <file md5sum="d269e8e3a2a7f0f4c6c1252a0bd2846c" name="tests/ifmix_complex.phpt" role="test" />
+   <file md5sum="90144cf1e7ef9143116534433e54f092" name="tests/comments_custom.phpt" role="test" />
+   <file md5sum="944c64dcae3b099418bd29d4f69aa407" name="tests/include.phpt" role="test" />
+   <file md5sum="f987f35a205e4ece5e22bb805126272b" name="tests/set_mixed.phpt" role="test" />
+   <file md5sum="3e8c372b5b7c8aa9efbeb83766a61843" name="tests/error_002.phpt" role="test" />
+   <file md5sum="750eb7264c36fb2115cff88b1931d5be" name="tests/errors.tpl" role="test" />
+   <file md5sum="20cdf279dc8c9a96a04f70aa3a448457" name="tests/magic_vars.phpt" role="test" />
+   <file md5sum="9f99ce0b91d1982824ecb2946a3932ae" name="tests/iterate_nonexistant.phpt" role="test" />
+   <file md5sum="43e4e12ab5d24ba8105b228362c7103e" name="tests/if_predefined.phpt" role="test" />
+   <file md5sum="123bbef55ca1d32ee5e479a39fbada0d" name="tests/include_multi.tpl" role="test" />
+   <file md5sum="4b74e64092b671e07a7bbed2c4afaaca" name="tests/escape.phpt" role="test" />
+   <file md5sum="efb2af33d67f42bc6f38029d1bf9f1db" name="tests/old_style.phpt" role="test" />
+   <file md5sum="7370d0bff9e0037bf8f7ecae54c26dd3" name="tests/duplicates.phpt" role="test" />
+   <file md5sum="ceef5df5cd3f40a2a8a02f7127a4b8dd" name="tests/double_init.phpt" role="test" />
+   <file md5sum="b5c5823366243caf877cad7e8872a1f4" name="tests/if.tpl" role="test" />
+   <file md5sum="a2de54886c19a97099c563a75ff6ef8f" name="tests/mfi_inc.tpl" role="test" />
+   <file md5sum="2b2f9ca9031c908e963d28df672f85c3" name="tests/clean.phpt" role="test" />
+   <file md5sum="14d7908bff6d5f50cb25d489150c2da3" name="tests/ifmix.phpt" role="test" />
+   <file md5sum="4295a327a800b8273051a744551bc3d5" name="tests/mix6.phpt" role="test" />
+   <file md5sum="0c4b1a68bc035960e5d3e970299f5f5f" name="tests/exceptions.phpt" role="test" />
+   <file md5sum="a8e71581c8dbd367427298893af6ce23" name="tests/if_expr3.phpt" role="test" />
+   <file md5sum="360e7075adc07c5aff899b6fe5cae7e7" name="tests/escape_cp1251.phpt" role="test" />
+   <file md5sum="3f3c3bd024a542586ab3b49f388a3cd6" name="tests/non_num_iter.phpt" role="test" />
+   <file md5sum="936d508aef731e663afb140601bb1397" name="tests/error_002.tpl" role="test" />
+   <file md5sum="8a812a004c43e25cbeda5c7264926431" name="tests/scope2.phpt" role="test" />
+   <file md5sum="a41b690023cc43fb62365443f0b5b0b3" name="tests/scope_if.phpt" role="test" />
+   <file md5sum="a227c2677d6c81b3b0495f6a96de175f" name="tests/context.phpt" role="test" />
+   <file md5sum="61fef8ba4e9932ff14cc85557742aeee" name="tests/loop_obj.phpt" role="test" />
+   <file md5sum="791111fafd339dc5fabddef484761146" name="tests/get_tokens.phpt" role="test" />
+   <file md5sum="1d9b17ddaff87e36d3c1ba41ad9ecb87" name="tests/object_advanced.phpt" role="test" />
+   <file md5sum="0267b70419a59ef71a390618c4c7086d" name="tests/var_no_prefix.phpt" role="test" />
+   <file md5sum="044cc75240511e7b4760a51012258f85" name="tests/date.phpt" role="test" />
+   <file md5sum="81a013d39272141e94ad7084957de967" name="tests/has_context.phpt" role="test" />
+   <file md5sum="b08545055e165ca9bb95bb78c85b11b5" name="tests/complex_conditions3.phpt" role="test" />
+   <file md5sum="061dd57b8d076258010c9dfd037b885d" name="tests/struct.phpt" role="test" />
+   <file md5sum="2f3f433a17e935b338417653e55d011e" name="tests/mix3.phpt" role="test" />
+   <file md5sum="8caf32e7244bb34641e7e8d49528b73f" name="tests/comments.phpt" role="test" />
+   <file md5sum="4507024f4978f347b74d93a585ffa28d" name="tests/begin_object.phpt" role="test" />
+   <file md5sum="13ae6a21d0a3d4e63ca4ae50446bffcc" name="tests/if_expr2.phpt" role="test" />
+   <file md5sum="f64be9c2c6364f46aed0206781948610" name="tests/if_expr6.phpt" role="test" />
+   <file md5sum="505614b2fdca6ec9061f23f61b819636" name="tests/scope4.phpt" role="test" />
+   <file md5sum="e6cc6c55c11eaa46d3a302179e0febeb" name="tests/path.phpt" role="test" />
+   <file md5sum="4523fd10f6f3f160f008bf08d5681510" name="tests/wrong_iterations.phpt" role="test" />
+   <file md5sum="7ca3cfd52619aa10636f70680331a02e" name="tests/include_ctx.tpl" role="test" />
+   <file md5sum="dbdd7cb9c5cf06c4dc8f56c7c8b9b881" name="tests/method.tpl" role="test" />
+   <file md5sum="569ded0f4656a1a9b08a0c59e0f12fb1" name="tests/mix5.phpt" role="test" />
+   <file md5sum="01a0b01eec12d3aa9029c5d656dcecb4" name="tests/spaces.phpt" role="test" />
+   <file md5sum="c86f5614e35241ff881178d1ced00847" name="tests/error_001.phpt" role="test" />
+   <file md5sum="7628901e9e73f7f01701f2990507ca65" name="tests/fetch1.phpt" role="test" />
+   <file md5sum="2354ee24a799df727d27ef584d716f51" name="tests/plugins.phpt" role="test" />
+   <file md5sum="01e4105d57f450ca7134e3e5c45b4ae3" name="tests/include-method.phpt" role="test" />
+   <file md5sum="9ba87a5b64795c1bb796119052142095" name="tests/mfi.tpl" role="test" />
+   <file md5sum="fa486d6abfc0c8fa9649c69951373054" name="tests/var.tpl" role="test" />
+   <file md5sum="33b106f0fb0cb140144e8cdc8878143e" name="tests/context.tpl" role="test" />
+   <file md5sum="d3fe3e55424a1229aace3416835bffd4" name="tests/include-inner.tpl" role="test" />
+   <file md5sum="581aed3d94fc740211e890efb7f09054" name="tests/parse_with_iterations.phpt" role="test" />
+   <file md5sum="27b1fd5aac2a1eac3c2a5eaec63b0c3c" name="tests/return_non_string.phpt" role="test" />
+   <file md5sum="2752af63c704c91f94b08ebb00500475" name="tests/scope5.phpt" role="test" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.0.0</min>
+    <max>5.9.9</max>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <providesextension>blitz</providesextension>
+ <changelog>
+  <release>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <version>
+    <release>0.9.1</release>
+    <api>0.9.1</api>
+   </version>
+   <date>2015-06-25</date>
+   <notes>
+blitz 0.9.1
+
+
+- FIX: added predefined constant $_i - loop identifier, same as $_num, but starts from 0.
+- FIX: "native" if, also fixes some logical errors (thanks to Nicolas Van Eenaeme)
+- FIX: arginfo added and a couple of other minor fixes (thanks to Anton "tony2001" Dovgal)*
+- FIX: zephir integration fix (plain blitz::__construct declaration)
+
+Also if/unless logic was unified across both function-like and context-like styles,
+so you can finally use things like {{ if (a>b &amp;&amp; c, "true", "false") }}.
+   </notes>
+  </release>
+  <release>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <version>
+    <release>0.8.18</release>
+    <api>0.8.18</api>
+   </version>
+   <date>2015-03-10</date>
+   <notes>
+blitz 0.8.18
+
+- Fix: NOT operator works incorrectly with string operands
+   </notes>
+  </release>
+  <release>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <version>
+    <release>0.8.17</release>
+    <api>0.8.17</api>
+   </version>
+   <date>2015-02-24</date>
+   <notes>
+blitz 0.8.17
+
+- FIX: fixes for complex conditions, added in 0.8.16
+   </notes>
+  </release>
+  <release>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <version>
+    <release>0.8.16</release>
+    <api>0.8.16</api>
+   </version>
+   <date>2015-02-13</date>
+   <notes>
+blitz v0.8.16
+
+- Merge branch 'poison-feature-complex-conditions'
+   </notes>
+  </release>
+ </changelog>
+</package>
