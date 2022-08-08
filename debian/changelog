@@ -1,3 +1,9 @@
+php-blitz (0.10.5+0.10.4+0.9.1) unstable; urgency=medium
+
+  * New upstream version 0.10.5+0.10.4+0.9.1
+
+ -- Vadim Rybalko <vadim@bionicman.name>  Thu, 05 Aug 2022 14:19:44 +0300
+
 php-blitz (0.10.5+0.10.4) unstable; urgency=medium
 
   * New upstream version 0.10.5+0.10.4
