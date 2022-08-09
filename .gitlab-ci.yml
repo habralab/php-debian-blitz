@@ -1,0 +1,29 @@
+---
+before_script:  
+  - source /etc/profile
+
+stages:
+  - build
+
+run-build-dpkg-focal:
+  stage: build
+  script:
+    - mkdir mkdir -p _build/src
+    - mv blitz-* _build/src/
+    - mv debian _build/src/
+    - mv package*.xml _build/src/
+    - cd _build/src && dpkg-buildpackage -b -rfakeroot -us -uc
+  only:
+    - /^debian-.*$/
+  artifacts:
+    paths:
+      - _build/*.deb
+      - _build/*.ddeb
+      - _build/*.buildinfo
+      - _build/*.changes
+      - _build/*.dsc
+      - _build/*.xz
+  tags:
+    - dpkg
+    - ubuntu
+    - focal
