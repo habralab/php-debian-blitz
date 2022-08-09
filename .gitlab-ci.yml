@@ -14,7 +14,7 @@ run-build-dpkg-focal:
     - mv package*.xml _build/src/
     - cd _build/src && dpkg-buildpackage -b -rfakeroot -us -uc
   only:
-    - /^debian-.*$/
+    - /^debian/.*$/
   artifacts:
     paths:
       - _build/*.deb
