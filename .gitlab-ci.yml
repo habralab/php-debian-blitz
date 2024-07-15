@@ -5,7 +5,7 @@ before_script:
 stages:
   - build
 
-run-build-dpkg-focal:
+run-dpkg-buildpackage:
   stage: build
   script:
     - mkdir -p _build/src

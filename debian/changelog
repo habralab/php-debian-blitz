@@ -1,3 +1,9 @@
+php-blitz (0.10.6+0.10.4+0.9.1-2) stable; urgency=medium
+
+  * Update CI script and fix package building process
+
+ -- Vadim Rybalko <vadim@bionicman.name>  Mon, 16 Jul 2024 00:02:33 +0100
+
 php-blitz (0.10.6+0.10.4+0.9.1-1) stable; urgency=medium
 
   * Special build of 0.10.6 for PHP 8 with last patches till 2024-07-15
