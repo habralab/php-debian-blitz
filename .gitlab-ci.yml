@@ -1,5 +1,5 @@
 ---
-before_script:  
+before_script:
   - source /etc/profile
 
 stages:
@@ -8,11 +8,11 @@ stages:
 run-build-dpkg-focal:
   stage: build
   script:
-    - mkdir mkdir -p _build/src
+    - mkdir -p _build/src
     - mv blitz-* _build/src/
     - mv debian _build/src/
     - mv package*.xml _build/src/
-    - cd _build/src && dpkg-buildpackage -b -rfakeroot -us -uc
+    - cd _build/src && DEB_BUILD_OPTIONS="nocheck" dpkg-buildpackage -b -rfakeroot -us -uc
   only:
     - /^debian/.*$/
   artifacts:

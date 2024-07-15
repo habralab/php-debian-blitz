@@ -16,7 +16,6 @@ Homepage: https://github.com/alexeyrybak/blitz
 Package: php-blitz
 Priority: optional
 Section: php
-Maintainer: Habr Team <servers@habr.team>
 Architecture: amd64
 Pre-Depends: php-common (>= 2:69~)
 Depends: ${misc:Depends},
@@ -31,4 +30,3 @@ Provides: ${pecl:Provides},
 Description: Blitz templates, template engine extension for PHP
  Fast and powerfull template engine for very big internet projects
  .
-

@@ -1,0 +1,11 @@
+Arginfo takes 2 arguments
+--- a/blitz-0.10.6/blitz.c
++++ b/blitz-0.10.6/blitz.c
+@@ -5917,6 +5917,7 @@
+ ZEND_END_ARG_INFO()
+ 
+ ZEND_BEGIN_ARG_INFO_EX(arginfo_blitz_include, 0, 0, 1)
++    ZEND_ARG_INFO(0, filename)
+     ZEND_ARG_INFO(0, input)
+ ZEND_END_ARG_INFO()
+ 

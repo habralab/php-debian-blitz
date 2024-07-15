@@ -1,0 +1,59 @@
+Segfault fixed in clean method: trying to get hash pointer via null pointer
+--- a/blitz-0.10.6/blitz.c
++++ b/blitz-0.10.6/blitz.c
+@@ -5816,7 +5816,9 @@
+     }
+ 
+     /* clean-up parent iteration */
+-    zend_hash_clean(HASH_OF(path_iteration_parent));
++    if (path_iteration_parent) {
++        zend_hash_clean(HASH_OF(path_iteration_parent));
++    }
+ 
+     /* reset current iteration pointer if it's current iteration  */
+     if ((current_len == norm_len) && (0 == strncmp(tpl->tmp_buf, tpl->current_path, norm_len))) {
+--- /dev/null
++++ b/blitz-0.10.6/tests/bug71_segfault.phpt
+@@ -0,0 +1,41 @@
++--TEST--
++Bug #71 (segfault on clean() and fetch())
++--FILE--
++<?php
++
++for ($i = 0; $i < 10; ++ $i) {
++    $t = new \blitz();
++    $t->load('');
++    $t->set(['_BODY' => []]);
++    $t->clean('/_BODY');
++}
++// and the same with fetch()!
++for ($i = 0; $i < 10; ++ $i) {
++    $t = new \blitz();
++    $t->load('');
++    $t->set(['_BODY' => []]);
++    $t->fetch('/_BODY');
++}
++var_dump("you supposed to see me, not segfault");
++?>
++--EXPECTF--
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s on line %d
++
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s/bug71_segfault.php on line %d
++
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s/bug71_segfault.php on line %d
++
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s/bug71_segfault.php on line %d
++
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s/bug71_segfault.php on line %d
++
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s/bug71_segfault.php on line %d
++
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s/bug71_segfault.php on line %d
++
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s/bug71_segfault.php on line %d
++
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s/bug71_segfault.php on line %d
++
++Warning: blitz::fetch(): cannot find context /_BODY in template  in %s/bug71_segfault.php on line %d
++string(36) "you supposed to see me, not segfault"
+\ No newline at end of file

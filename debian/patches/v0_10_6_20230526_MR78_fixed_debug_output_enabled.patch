@@ -1,0 +1,96 @@
+Fixed debug output enabled by BLITZ_DEBUG
+--- a/blitz-0.10.6/blitz.c
++++ b/blitz-0.10.6/blitz.c
+@@ -46,6 +46,8 @@
+ #include "zend_smart_str.h"
+ #endif
+ 
++#include "blitz_debug.h"
++
+ #ifdef PHP_WIN32
+ #include "win32/time.h"
+ #else
+@@ -3201,7 +3203,7 @@
+                 smart_str buf = {0};
+                 php_var_export_ex(&scope_iteration, 1, &buf);
+                 smart_str_0 (&buf);
+-                php_printf("--> scope_iteration:%s value:%s\n", zend_zval_type_name(&scope_iteration), buf.a);
++                php_printf("--> scope_iteration:%s value:%s\n", zend_zval_type_name(&scope_iteration), ZSTR_VAL(buf.s));
+                 smart_str_free(&buf);
+             }
+ 
+@@ -3831,7 +3833,7 @@
+         smart_str buf = {0};
+         php_var_export_ex(return_value, 1, &buf);
+         smart_str_0 (&buf);
+-        php_printf("--> type:%s value:%s\n", zend_zval_type_name(return_value), buf.a);
++        php_printf("--> type:%s value:%s\n", zend_zval_type_name(return_value), ZSTR_VAL(buf.s));
+         smart_str_free(&buf);
+     }
+ 
+@@ -4050,7 +4052,7 @@
+                 smart_str buf = {0};
+                 php_var_export_ex(z_stack_ptr[num_a], 1, &buf);
+                 smart_str_0 (&buf);
+-                php_printf("intermediate results --> type:%s value:%s\n", zend_zval_type_name(&z_stack[num_a]), buf.a);
++                php_printf("intermediate results --> type:%s value:%s\n", zend_zval_type_name(&z_stack[num_a]), ZSTR_VAL(buf.s));
+                 smart_str_free(&buf);
+             }
+ 
+--- /dev/null
++++ b/blitz-0.10.6/blitz_debug.c
+@@ -0,0 +1,39 @@
++#include "php.h"
++#include "ext/standard/php_standard.h"
++
++static int dump_array_values(void *pDest, int num_args, va_list args, zend_hash_key *hash_key);
++
++void blitz_dump_ht(HashTable *ht, int depth) {
++    php_printf("%*carray(%d) {\n", depth * 2, ' ', zend_hash_num_elements(ht));
++    zend_hash_apply_with_arguments(ht, dump_array_values, 1, depth + 1);
++    php_printf("%*c}\n", depth * 2, ' ');
++}
++
++static void dump_value(zval *zv, int depth) {
++    if (Z_TYPE_P(zv) == IS_ARRAY) {
++        php_printf("%*carray(%d) {\n", depth * 2, ' ', zend_hash_num_elements(Z_ARRVAL_P(zv)));
++        zend_hash_apply_with_arguments(Z_ARRVAL_P(zv), dump_array_values, 1, depth + 1);
++        php_printf("%*c}\n", depth * 2, ' ');
++    } else {
++        php_printf("%*c%Z\n", depth * 2, ' ', zv);
++    }
++}
++
++static int dump_array_values(
++    void *pDest, int num_args, va_list args, zend_hash_key *hash_key
++) {
++    zval *zv = (zval *) pDest;
++    int depth = va_arg(args, int);
++
++    if (hash_key->key == NULL) {
++        php_printf("%*c[%ld]=>\n", depth * 2, ' ', hash_key->h);
++    } else {
++        php_printf("%*c[\"", depth * 2, ' ');
++        PHPWRITE(ZSTR_VAL(hash_key->key), ZSTR_LEN(hash_key->key));
++        php_printf("\"]=>\n");
++    }
++
++    php_var_dump(zv, depth);
++
++    return ZEND_HASH_APPLY_KEEP;
++}
+--- /dev/null
++++ b/blitz-0.10.6/blitz_debug.h
+@@ -0,0 +1,3 @@
++#pragma once
++
++void blitz_dump_ht(HashTable *ht, int depth);
+--- a/blitz-0.10.6/config.m4
++++ b/blitz-0.10.6/config.m4
+@@ -17,5 +17,5 @@
+ [  --enable-blitz          Enable blitz support])
+ 
+ if test "$PHP_BLITZ" != "no"; then
+-  PHP_NEW_EXTENSION(blitz, blitz.c, $ext_shared)
++  PHP_NEW_EXTENSION(blitz, blitz.c blitz_debug.c, $ext_shared)
+ fi

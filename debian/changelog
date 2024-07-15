@@ -1,3 +1,21 @@
+php-blitz (0.10.6+0.10.4+0.9.1-1) stable; urgency=medium
+
+  * Special build of 0.10.6 for PHP 8 with last patches till 2024-07-15
+
+ -- Vadim Rybalko <vadim@bionicman.name>  Mon, 15 Jul 2024 17:15:02 +0100
+
+php-blitz (0.10.6+0.10.4+0.9.1-1) stable; urgency=medium
+
+  * Release for version 0.10.6+0.10.4+0.9.1
+
+ -- Vadim Rybalko <vadim@bionicman.name>  Mon, 15 Jul 2024 12:39:15 +0100
+
+php-blitz (0.10.6+0.10.4+0.9.1) unstable; urgency=medium
+
+  * New upstream version 0.10.6+0.10.4+0.9.1
+
+ -- Vadim Rybalko <vadim@bionicman.name>  Mon, 15 Jul 2024 12:39:15 +0100
+
 php-blitz (0.10.5+0.10.4+0.9.1-1) stable; urgency=medium
 
   * Release for version 0.10.5+0.10.4+0.9.1

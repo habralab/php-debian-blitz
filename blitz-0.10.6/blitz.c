@@ -17,7 +17,7 @@
 */
 
 #define BLITZ_DEBUG 0
-#define BLITZ_VERSION_STRING "0.10.6"
+#define BLITZ_VERSION_STRING "0.10.7"
 
 #ifndef PHP_WIN32
 #include <sys/mman.h>
@@ -45,6 +45,8 @@
 #include "ext/standard/php_smart_string.h"
 #include "zend_smart_str.h"
 #endif
+
+#include "blitz_debug.h"
 
 #ifdef PHP_WIN32
 #include "win32/time.h"
@@ -3201,7 +3203,7 @@ static inline int blitz_exec_predefined_method(blitz_tpl *tpl, blitz_node *node,
                 smart_str buf = {0};
                 php_var_export_ex(&scope_iteration, 1, &buf);
                 smart_str_0 (&buf);
-                php_printf("--> scope_iteration:%s value:%s\n", zend_zval_type_name(&scope_iteration), buf.a);
+                php_printf("--> scope_iteration:%s value:%s\n", zend_zval_type_name(&scope_iteration), ZSTR_VAL(buf.s));
                 smart_str_free(&buf);
             }
 
@@ -3831,7 +3833,7 @@ static inline int blitz_arg_to_zval(
         smart_str buf = {0};
         php_var_export_ex(return_value, 1, &buf);
         smart_str_0 (&buf);
-        php_printf("--> type:%s value:%s\n", zend_zval_type_name(return_value), buf.a);
+        php_printf("--> type:%s value:%s\n", zend_zval_type_name(return_value), ZSTR_VAL(buf.s));
         smart_str_free(&buf);
     }
 
@@ -4050,7 +4052,7 @@ static inline void blitz_check_expr (
                 smart_str buf = {0};
                 php_var_export_ex(z_stack_ptr[num_a], 1, &buf);
                 smart_str_0 (&buf);
-                php_printf("intermediate results --> type:%s value:%s\n", zend_zval_type_name(&z_stack[num_a]), buf.a);
+                php_printf("intermediate results --> type:%s value:%s\n", zend_zval_type_name(&z_stack[num_a]), ZSTR_VAL(buf.s));
                 smart_str_free(&buf);
             }
 
@@ -4435,7 +4437,6 @@ static inline int blitz_normalize_path(blitz_tpl *tpl, char **dest, const char *
 
 static inline int blitz_iterate_by_path(blitz_tpl *tpl, const char *path, int path_len, int is_current_iteration, int create_new) /* {{{ */
 {
-    zval *tmp;
     int i = 1, ilast = 1, j = 0, k = 0;
     const char *p = path;
     int pmax = path_len;
@@ -4445,7 +4446,8 @@ static inline int blitz_iterate_by_path(blitz_tpl *tpl, const char *path, int pa
     int is_root = 0;
 
     k = pmax - 1;
-    tmp = &tpl->iterations;
+    HashTable *tmp = HASH_OF(&tpl->iterations);
+    HashPosition tmp_pos;
 
     if (BLITZ_DEBUG) {
         php_printf("[debug] BLITZ_FUNCTION: blitz_iterate_by_path, path=%s\n", path);
@@ -4458,19 +4460,18 @@ static inline int blitz_iterate_by_path(blitz_tpl *tpl, const char *path, int pa
         is_root = 1;
     }
 
-    if ((0 == zend_hash_num_elements(HASH_OF(tmp)) || (is_root && create_new))) {
+    if ((0 == zend_hash_num_elements(tmp) || (is_root && create_new))) {
         blitz_populate_root(tpl);
     }
 
     /* iterate root  */
     if (is_root) {
         zval *tmp_iteration;
-        zend_hash_internal_pointer_end(HASH_OF(tmp));
-        if ((tmp_iteration = blitz_hash_get_current_data(HASH_OF(tmp))) != NULL) {
+        zend_hash_internal_pointer_end_ex(tmp, &tmp_pos);
+        if ((tmp_iteration = blitz_hash_get_current_data_ex(tmp, &tmp_pos)) != NULL) {
             INDIRECT_RETURN(tmp_iteration, 0);
             tpl->last_iteration = tmp_iteration;
             if (is_current_iteration) {
-                /*blitz_hash_get_current_data(HASH_OF(*tmp), (void **) &tpl->current_iteration); */
                 tpl->current_iteration = tpl->last_iteration;
                 tpl->current_iteration_parent = & tpl->iterations;
             }
@@ -4499,29 +4500,28 @@ static inline int blitz_iterate_by_path(blitz_tpl *tpl, const char *path, int pa
 
             if (BLITZ_DEBUG) php_printf("[debug] going move to:%s\n",key);
 
-            zend_hash_internal_pointer_end(HASH_OF(tmp));
-            if ((tmp2 = blitz_hash_get_current_data(HASH_OF(tmp))) == NULL) {
+            zend_hash_internal_pointer_end_ex(tmp, &tmp_pos);
+            if ((tmp2 = blitz_hash_get_current_data_ex(tmp, &tmp_pos)) == NULL) {
                 zval empty_array;
                 if (BLITZ_DEBUG) php_printf("[debug] current_data not found, will populate the list \n");
                 array_init(&empty_array);
-                add_next_index_zval(tmp, &empty_array);
-                if ((tmp2 = blitz_hash_get_current_data(HASH_OF(tmp))) == NULL) {
+                zend_hash_next_index_insert(tmp, &empty_array);
+                if ((tmp2 = blitz_hash_get_current_data_ex(tmp, &tmp_pos)) == NULL) {
                     return 0;
                 }
                 INDIRECT_RETURN(tmp2, 0);
                 if (BLITZ_DEBUG) {
                     php_printf("[debug] tmp becomes:\n");
-                    php_var_dump(tmp,0);
+                    blitz_dump_ht(tmp,0);
                 }
             } else {
                 if (BLITZ_DEBUG) {
                     php_printf("[debug] tmp dump (node):\n");
-                    php_var_dump(tmp,0);
+                    blitz_dump_ht(tmp,0);
                 }
             }
-            tmp = tmp2;
 
-            if (Z_TYPE_P(tmp) != IS_ARRAY) {
+            if (Z_TYPE_P(tmp2) != IS_ARRAY) {
                 blitz_error(tpl, E_WARNING,
                     "OPERATION ERROR: unable to iterate context \"%s\" in \"%s\" "
                     "because parent iteration was not set as array of arrays before. "
@@ -4529,7 +4529,10 @@ static inline int blitz_iterate_by_path(blitz_tpl *tpl, const char *path, int pa
                 return 0;
             }
 
-            tmp2 = blitz_hash_str_find_ind(HASH_OF(tmp), key, key_len);
+            tmp = HASH_OF(tmp2);
+            zend_hash_internal_pointer_end_ex(tmp, &tmp_pos);
+
+            tmp2 = blitz_hash_str_find_ind(tmp, key, key_len);
             if (!tmp2) {
                 zval empty_array;
                 zval init_array;
@@ -4547,7 +4550,7 @@ static inline int blitz_iterate_by_path(blitz_tpl *tpl, const char *path, int pa
                     if (tpl->current_iteration) php_var_dump(tpl->current_iteration,1);
                 }
 
-                add_assoc_zval_ex(tmp, key, key_len, &init_array);
+                zend_hash_str_add(tmp, key, key_len, &init_array);
 
                 if (BLITZ_DEBUG) {
                     php_printf("D-2: %p %p\n", tpl->current_iteration, tpl->last_iteration);
@@ -4555,27 +4558,25 @@ static inline int blitz_iterate_by_path(blitz_tpl *tpl, const char *path, int pa
                 }
 
                 add_next_index_zval(&init_array, &empty_array);
-                zend_hash_internal_pointer_end(HASH_OF(tmp));
+                zend_hash_internal_pointer_end_ex(tmp, &tmp_pos);
 
                 if (BLITZ_DEBUG) {
-                    php_var_dump(tmp, 0);
+                    blitz_dump_ht(tmp, 0);
                 }
 
                 /* 2DO: getting tmp and current_iteration_parent can be done by 1 call of blitz_hash_get_current_data */
                 if (is_current_iteration) {
-                    tpl->current_iteration_parent = blitz_hash_get_current_data(HASH_OF(tmp));
+                    tpl->current_iteration_parent = blitz_hash_get_current_data_ex(tmp, &tmp_pos);
                     if (!tpl->current_iteration_parent) {
                         return 0;
                     }
                 }
 
-                tmp2 = blitz_hash_get_current_data(HASH_OF(tmp));
+                tmp2 = blitz_hash_get_current_data_ex(tmp, &tmp_pos);
                 if (!tmp2) {
                     return 0;
                 }
             }
-
-            tmp = tmp2;
 
             if (Z_TYPE_P(tmp2) != IS_ARRAY) {
                 blitz_error(tpl, E_WARNING,
@@ -4585,10 +4586,13 @@ static inline int blitz_iterate_by_path(blitz_tpl *tpl, const char *path, int pa
                 return 0;
             }
 
+            tmp = HASH_OF(tmp2);
+            zend_hash_internal_pointer_end_ex(tmp, &tmp_pos);
+
             ilast = i + 1;
             if (BLITZ_DEBUG) {
                 php_printf("[debug] tmp dump (item \"%s\"):\n",key);
-                php_var_dump(tmp, 0);
+                blitz_dump_ht(tmp, 0);
             }
         }
         ++p;
@@ -4607,20 +4611,20 @@ static inline int blitz_iterate_by_path(blitz_tpl *tpl, const char *path, int pa
           so in this particular case we do create an empty iteration.
     */
 
-    if (found && (create_new || 0 == zend_hash_num_elements(HASH_OF(tmp)))) {
+    if (found && (create_new || 0 == zend_hash_num_elements(tmp))) {
         zval empty_array;
         array_init(&empty_array);
 
-        add_next_index_zval(tmp, &empty_array);
-        zend_hash_internal_pointer_end(HASH_OF(tmp));
+        zend_hash_next_index_insert(tmp, &empty_array);
+        zend_hash_internal_pointer_end_ex(tmp, &tmp_pos);
 
         if (BLITZ_DEBUG) {
             php_printf("[debug] found, will add new iteration\n");
-            php_var_dump(tmp, 0);
+            blitz_dump_ht(tmp, 0);
         }
     }
 
-    tpl->last_iteration = blitz_hash_get_current_data(HASH_OF(tmp));
+    tpl->last_iteration = blitz_hash_get_current_data_ex(tmp, &tmp_pos);
     if (!tpl->last_iteration) {
         blitz_error(tpl, E_WARNING,
             "INTERNAL ERROR: unable fetch last_iteration in blitz_iterate_by_path");
@@ -4981,34 +4985,28 @@ static inline int blitz_prepare_iteration(blitz_tpl *tpl, const char *path, int 
 }
 /* }}} */
 
-static inline int blitz_merge_iterations_by_str_keys(zval *target, zval *input) /* {{{ */
+static inline int blitz_merge_iterations_by_str_keys(zval *target, HashTable *input_ht, HashPosition *input_pos) /* {{{ */
 {
     zval *elem;
-    HashTable *input_ht = NULL;
     zend_string *key = NULL;
     zend_ulong index = 0;
 
-    if (!input || (IS_ARRAY != Z_TYPE_P(input)) || (IS_ARRAY != Z_TYPE_P(target))) {
-        return 0;
-    }
-
-    if (0 == zend_hash_num_elements(HASH_OF(input))) {
+    if (0 == zend_hash_num_elements(input_ht)) {
         return 1;
     }
 
-    input_ht = HASH_OF(input);
-    while ((elem = blitz_hash_get_current_data(input_ht)) != NULL) {
-        if (zend_hash_get_current_key(input_ht, &key, &index) != HASH_KEY_IS_STRING) {
-            zend_hash_move_forward(input_ht);
+    while ((elem = blitz_hash_get_current_data_ex(input_ht, input_pos)) != NULL) {
+        if (zend_hash_get_current_key_ex(input_ht, &key, &index, input_pos) != HASH_KEY_IS_STRING) {
+            zend_hash_move_forward_ex(input_ht, input_pos);
             continue;
         }
-        INDIRECT_CONTINUE_FORWARD(input_ht, elem);
+        INDIRECT_CONTINUE_FORWARD_EX(input_ht, input_pos, elem);
 
         if (key && key->len) {
             zval_add_ref(elem);
             zend_hash_str_update(HASH_OF(target), key->val, key->len, elem);
         }
-        zend_hash_move_forward(input_ht);
+        zend_hash_move_forward_ex(input_ht, input_pos);
     }
 
     return 1;
@@ -5050,6 +5048,7 @@ static inline int blitz_merge_iterations_by_num_keys(zval *target, zval *input) 
 static inline int blitz_merge_iterations_set(blitz_tpl *tpl, zval *input_arr) /* {{{ */
 {
     HashTable *input_ht = NULL;
+    HashPosition input_pos;
     zend_string *key = NULL;
     zend_ulong index = 0;
     int is_current_iteration = 0, first_key_type = 0;
@@ -5063,9 +5062,10 @@ static inline int blitz_merge_iterations_set(blitz_tpl *tpl, zval *input_arr) /*
     /* set works differently for numerical keys and string keys: */
     /*     (1) STRING: set(array('a' => 'a_val')) will update current_iteration keys */
     /*     (2) LONG: set(array(0=>array('a'=>'a_val'))) will reset current_iteration_parent */
+    SEPARATE_ARRAY(input_arr);
     input_ht = HASH_OF(input_arr);
-    zend_hash_internal_pointer_reset(input_ht);
-    first_key_type = zend_hash_get_current_key(input_ht, &key, &index);
+    zend_hash_internal_pointer_reset_ex(input_ht, &input_pos);
+    first_key_type = zend_hash_get_current_key_ex(input_ht, &key, &index, &input_pos);
 
     /* *** FIXME *** */
     /* blitz_iterate_by_path here should have is_current_iteration = 1 ALWAYS. */
@@ -5090,7 +5090,7 @@ static inline int blitz_merge_iterations_set(blitz_tpl *tpl, zval *input_arr) /*
 
     if (HASH_KEY_IS_STRING == first_key_type) {
         target_iteration = tpl->last_iteration;
-        blitz_merge_iterations_by_str_keys(target_iteration, input_arr);
+        blitz_merge_iterations_by_str_keys(target_iteration, input_ht, &input_pos);
     } else {
         if (!tpl->current_iteration_parent) {
             blitz_error(tpl, E_WARNING, "INTERNAL ERROR: unable to set into current_iteration_parent, is NULL");
@@ -5304,6 +5304,7 @@ static PHP_FUNCTION(blitz_set_global)
     zval *id, *desc, *input_arr, *elem;
     blitz_tpl *tpl;
     HashTable *input_ht;
+    HashPosition input_pos;
     zend_string *key;
     zend_ulong index;
 
@@ -5319,25 +5320,25 @@ static PHP_FUNCTION(blitz_set_global)
     }
 
     zend_hash_internal_pointer_reset(tpl->hash_globals);
-    zend_hash_internal_pointer_reset(input_ht);
+    zend_hash_internal_pointer_reset_ex(input_ht, &input_pos);
 
-    while ((elem = blitz_hash_get_current_data(input_ht)) != NULL) {
-        if (zend_hash_get_current_key(input_ht, &key, &index) != HASH_KEY_IS_STRING) {
-            zend_hash_move_forward(input_ht);
+    while ((elem = blitz_hash_get_current_data_ex(input_ht, &input_pos)) != NULL) {
+        if (zend_hash_get_current_key_ex(input_ht, &key, &index, &input_pos) != HASH_KEY_IS_STRING) {
+            zend_hash_move_forward_ex(input_ht, &input_pos);
             continue;
         }
 
-        INDIRECT_CONTINUE_FORWARD(input_ht, elem);
+        INDIRECT_CONTINUE_FORWARD_EX(input_ht, &input_pos, elem);
 
         /* disallow empty keys */
         if (!key || !key->len) {
-            zend_hash_move_forward(input_ht);
+            zend_hash_move_forward_ex(input_ht, &input_pos);
             continue;
         }
 
         zval_add_ref(elem);
         zend_hash_str_update(tpl->hash_globals, key->val, key->len, elem);
-        zend_hash_move_forward(input_ht);
+        zend_hash_move_forward_ex(input_ht, &input_pos);
     }
 
     RETURN_TRUE;
@@ -5819,7 +5820,9 @@ static PHP_FUNCTION(blitz_clean)
     }
 
     /* clean-up parent iteration */
-    zend_hash_clean(HASH_OF(path_iteration_parent));
+    if (path_iteration_parent) {
+        zend_hash_clean(HASH_OF(path_iteration_parent));
+    }
 
     /* reset current iteration pointer if it's current iteration  */
     if ((current_len == norm_len) && (0 == strncmp(tpl->tmp_buf, tpl->current_path, norm_len))) {
@@ -5920,6 +5923,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_blitz_block, 0, 0, 1)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_blitz_include, 0, 0, 1)
+    ZEND_ARG_INFO(0, filename)
     ZEND_ARG_INFO(0, input)
 ZEND_END_ARG_INFO()
 
@@ -5988,6 +5992,9 @@ PHP_MINIT_FUNCTION(blitz) /* {{{ */
     le_blitz = zend_register_list_destructors_ex(blitz_resource_dtor, NULL, "Blitz template", module_number);
 
     INIT_CLASS_ENTRY(blitz_class_entry, "blitz", blitz_functions);
+    #if PHP_VERSION_ID >= 80200
+        blitz_class_entry.ce_flags |= ZEND_ACC_ALLOW_DYNAMIC_PROPERTIES;
+    #endif
     zend_register_internal_class(&blitz_class_entry);
     blitz_register_constants(INIT_FUNC_ARGS_PASSTHRU);
 
