@@ -23,7 +23,4 @@ run-build-dpkg-focal:
       - _build/*.changes
       - _build/*.dsc
       - _build/*.xz
-  tags:
-    - dpkg
-    - ubuntu
-    - focal
+  tags: []
