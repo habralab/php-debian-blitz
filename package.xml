@@ -10,11 +10,11 @@
   <email>vadim@bionicman.name</email>
   <active>no</active>
  </lead>
- <date>2022-08-05</date>
- <time>01:05:59</time>
+ <date>2022-09-19</date>
+ <time>02:53:00</time>
  <version>
-  <release>0.10.5</release>
-  <api>0.10.5</api>
+  <release>0.10.6</release>
+  <api>0.10.6</api>
  </version>
  <stability>
   <release>stable</release>
@@ -22,6 +22,12 @@
  </stability>
  <license uri="http://www.php.net/license">PHP</license>
  <notes>
+blitz 0.10.6-PHP8
+
+- fixed segfault on calling fetch() with empty array as argument
+
+---
+
 blitz 0.10.5-PHP8
 
 - PHP7 -> PHP8 upgrade
@@ -47,13 +53,12 @@ functionality in other template engines)
    <file md5sum="68ff5402564378ab053a64102a5c5b22" name="misc/zend_studio/readme.txt" role="doc" />
    <file md5sum="cfd5bae79ab585cc091cd3f82a89627c" name="misc/zend_studio/Blitz.php" role="src" />
    <file md5sum="c62ff247166a2c8b62f5720602545a88" name="run-tests.sh" role="src" />
-   <file md5sum="acfc77d2bc7364e3a80ec6d93bb5a067" name=".git" role="doc" />
    <file md5sum="f6264de1a26e56aa3a602a649d162d93" name="README" role="doc" />
    <file md5sum="cadc6f865c3264b8dbabea807e8908ac" name="config.m4" role="src" />
    <file md5sum="058d255450050dc17c245cf9656eb66f" name="php_blitz.h" role="src" />
    <file md5sum="b26faeae0e569dcebdae77e21bae1675" name=".gitignore" role="doc" />
    <file md5sum="390accbc365a1d8e18c2ccdd84f2a8d7" name=".cvsignore" role="doc" />
-   <file md5sum="a14d1d26a7b69c4a92eb087fda5e815a" name="blitz.c" role="src" />
+   <file md5sum="415cb4f53733b46b2d91b3c126e1ebed" name="blitz.c" role="src" />
    <file md5sum="72d64e4ad6f1160c41b218e2f60dfba5" name="LICENSE" role="doc" />
    <file md5sum="265be63fc7f89b0b393aa69f706cfff9" name="doc/README" role="doc" />
    <file md5sum="f807daa50a73f6e823e8363b33459566" name="utils/release.sh" role="src" />
@@ -199,6 +204,22 @@ functionality in other template engines)
  </dependencies>
  <providesextension>blitz</providesextension>
  <changelog>
+  <release>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <version>
+    <release>0.10.6</release>
+    <api>0.10.6</api>
+   </version>
+   <date>2022-09-19</date>
+   <notes>
+blitz 0.10.6-PHP8
+
+- fixed segfault on calling fetch() with empty array as argument
+   </notes>
+  </release>
   <release>
    <stability>
     <release>stable</release>
